@@ -8,9 +8,11 @@ Requirements
 Setup
 -----
 1. Add the following lines to pg_hba.conf (which is located in C:\Program Files\PostgreSQL\9.2\data on Windows)
+
         host	 all	 		antani	 		127.0.0.1/32	 		password
         host	 all	 		antani	 		::1/128			 		password
 2. Create user 'antani' and database 'LiquibaseWorkshop' on psql console
+
         CREATE USER antani WITH PASSWORD 'antani';
         CREATE DATABASE LiquibaseWorkshop;
         GRANT ALL PRIVILEGES ON DATABASE LiquibaseWorkshop to antani;
@@ -19,6 +21,7 @@ Maven usage
 -----------
 
 * Schema updating
+
 ```
 mvn -e compile liquibase:update
 ```
@@ -26,6 +29,7 @@ mvn -e compile liquibase:update
 This command will update the current db schema according to src/main/db/changelogs.xml content.
 
 * Creating a changeset
+
 ```
 mvn -e compile liquibase:diff
 ```
