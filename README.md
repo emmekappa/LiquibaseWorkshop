@@ -38,6 +38,7 @@ This command will do a diff from current hibernate schema to the local PostgreSQ
 
 
 References
+----------
 
 Liquibase Hibernate integration
 
