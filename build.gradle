@@ -1,0 +1,57 @@
+import com.augusttechgroup.gradle.liquibase.Database
+
+apply plugin: 'java'
+apply plugin: 'war'
+//apply plugin: 'idea'
+apply plugin: 'liquibase'
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.augusttechgroup:gradle-liquibase-plugin:0.7'
+        classpath 'org.postgresql:postgresql:9.2-1003-jdbc4'
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile 'org.hibernate:hibernate-core:4.2.3.Final'
+    runtime 'org.postgresql:postgresql:9.2-1003-jdbc4'
+    testCompile 'junit:junit:4.11'
+}
+
+liquibase {
+    changelogs {
+        main {
+            file = file('src/main/db/changelogs.xml')
+        }
+    }
+
+    databases {
+        localhost {
+            file("src/main/db/localhost.properties").withReader { reader ->
+                def userProps = new Properties()
+                userProps.load(reader)
+
+                url = userProps['url']
+                username = userProps['username']
+                password = userProps['password']
+            }
+        }
+        defaultDatabase = databases.localhost
+    }
+
+    diff {
+        setReferenceDatabase(db)
+        liquibase.database['localhost'].url = "hibernate:hibernate.cfg.xml"
+    }
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '1.6'
+}
