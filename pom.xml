@@ -91,8 +91,8 @@
 
                     <referenceUrl>hibernate:hibernate.cfg.xml</referenceUrl>
                     <url>jdbc:postgresql://localhost/LiquibaseWorkshop</url>
-                    <username>postgres</username>
-                    <password>Jobrapido1</password>
+                    <username>antani</username>
+                    <password>antani</password>
                     <driver>org.postgresql.Driver</driver>
 
                     <verbose>true</verbose>

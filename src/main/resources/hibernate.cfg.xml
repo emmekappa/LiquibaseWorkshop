@@ -11,13 +11,13 @@
             org.postgresql.Driver
         </property>
         <property name="dialect">
-            org.hibernate.dialect.PostgreSQLDialect
+            org.hibernate.dialect.PostgreSQL82Dialect
         </property>
         <property name="connection.username">
-            postgres
+            antani
         </property>
         <property name="connection.password">
-            Jobrapido1
+            antani
         </property>
         <property name="hbm2ddl.auto">
             validate
