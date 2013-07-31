@@ -4,6 +4,7 @@ LiquibaseWorkshop
 Requirements
 ------------
 * PostgreSQL installed on localhost
+* Maven
 
 Setup
 -----
