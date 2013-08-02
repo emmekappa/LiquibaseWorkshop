@@ -1,17 +1,17 @@
-import com.augusttechgroup.gradle.liquibase.Database
-
 apply plugin: 'java'
 apply plugin: 'war'
-//apply plugin: 'idea'
-apply plugin: 'liquibase'
+apply plugin: 'idea'
 
 buildscript {
     repositories {
         mavenCentral()
     }
+
     dependencies {
-        classpath 'com.augusttechgroup:gradle-liquibase-plugin:0.7'
+        classpath 'org.hibernate:hibernate-core:4.2.3.Final'
         classpath 'org.postgresql:postgresql:9.2-1003-jdbc4'
+        classpath 'net.customware.liquibase:liquibase-hibernate:2.1.0'
+        classpath 'org.liquibase:liquibase-core:3.0.2'
     }
 }
 
@@ -19,37 +19,38 @@ repositories {
     mavenCentral()
 }
 
+configurations {
+    liquibase
+}
+
 dependencies {
+    liquibase 'org.liquibase:liquibase-core:3.0.2'
+    liquibase 'net.customware.liquibase:liquibase-hibernate:2.1.0'
     compile 'org.hibernate:hibernate-core:4.2.3.Final'
     runtime 'org.postgresql:postgresql:9.2-1003-jdbc4'
     testCompile 'junit:junit:4.11'
 }
 
-liquibase {
-    changelogs {
-        main {
-            file = file('src/main/db/changelogs.xml')
-        }
+task validate << {
+    def classPath = "";
+    configurations.liquibase.files.each { file ->
+        classPath += ":" + file.path
     }
 
-    databases {
-        localhost {
-            file("src/main/db/localhost.properties").withReader { reader ->
-                def userProps = new Properties()
-                userProps.load(reader)
 
-                url = userProps['url']
-                username = userProps['username']
-                password = userProps['password']
-            }
-        }
-        defaultDatabase = databases.localhost
-    }
+    ant.taskdef(resource: 'liquibasetasks.properties', classpath: classPath)
 
-    diff {
-        setReferenceDatabase(db)
-        liquibase.database['localhost'].url = "hibernate:hibernate.cfg.xml"
-    }
+    ant.references.classpath = ant.path { fileset(dir: 'lib', includes: '*.jar') }
+
+    ant.diffDatabase(
+            driver: 'org.postgresql.Driver',
+            url: 'jdbc:postgresql://localhost/LiquibaseWorkshop',
+            username: 'antani',
+            password: 'antani',
+            referenceUrl: 'hibernate:hibernate.cfg.xml',
+            outputFile: 'changelog.xml',
+            classpathref: 'classpath'
+            )
 }
 
 task wrapper(type: Wrapper) {
