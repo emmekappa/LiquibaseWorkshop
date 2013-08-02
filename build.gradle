@@ -32,15 +32,12 @@ dependencies {
 }
 
 task validate << {
-    def classPath = "";
-    configurations.liquibase.files.each { file ->
-        classPath += ":" + file.path
+    ant.path(id: 'classpath') {
+        ant.pathelement(path: configurations.liquibase.asPath)
+        ant.pathelement { fileset(dir: 'lib', includes: '*.jar') }
     }
 
-
-    ant.taskdef(resource: 'liquibasetasks.properties', classpath: classPath)
-
-    ant.references.classpath = ant.path { fileset(dir: 'lib', includes: '*.jar') }
+    ant.taskdef(resource: 'liquibasetasks.properties', classpathref: 'classpath')
 
     ant.diffDatabase(
             driver: 'org.postgresql.Driver',
